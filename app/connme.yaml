@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: connme
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: registry.conn-me.ru:5000/connme.ru-app
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
+    argocd-image-updater.argoproj.io/git-branch: main
+spec:
+  destination:
+    namespace: www-connme-ru
+    server: https://kubernetes.default.svc
+  project: connme-project
+  source:
+    path: app/
+    repoURL: https://github.com/IvanKuchin/k8s-www.connme.microk8s.conn-me.ru
+    targetRevision: master
+  syncPolicy:
+    automated: {}
